@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { IProduct, ProductService } from '../services/product.service';
+import { IProduct } from '../services/product-data';
+import { ProductService } from '../services/product.service';
 
 @Component({
   selector: 'app-product-gallery',
