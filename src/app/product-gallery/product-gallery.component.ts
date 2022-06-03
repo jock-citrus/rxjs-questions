@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { switchMap, Observable, of, shareReplay, combineLatest, map } from 'rxjs';
 import { IProduct } from '../services/product-data';
 import { ProductService } from '../services/product.service';
 
@@ -9,24 +9,39 @@ import { ProductService } from '../services/product.service';
   styleUrls: ['./product-gallery.component.css'],
 })
 export class ProductGalleryComponent {
-  
   /** SECTION 1 */
-  
+
   productOneId: string = 'product-1';
-  
-  productOne$: Observable<IProduct | undefined> = of(undefined);
-  
-  productsWithSameCategoryAsProductOne$: Observable<IProduct[]> = of([]);
-  
+
+  productOne$: Observable<IProduct | undefined> = this.productService
+    .getProductById(this.productOneId)
+    .pipe(shareReplay({ bufferSize: 1, refCount: true }));
+
+  productsWithSameCategoryAsProductOne$: Observable<IProduct[]> =
+    this.productOne$.pipe(
+      switchMap((productOne) =>
+        this.productService.getProductsOfSameCategory(productOne?.productCode)
+      )
+    );
+
   /** SECTION 2 */
 
   productIds: string[] = ['product-1', 'product-2', 'product-3'];
-  
-  products$: Observable<(IProduct | undefined)[]> = of([]);
 
-  activeProducts$: Observable<(IProduct | undefined)[]> = of([]);
+  productObs: Observable<IProduct | undefined>[] = this.productIds.map((id) =>
+    this.productService.getProductById(id)
+  );
 
-  activeProductNames$: Observable<(string | undefined)[]> = of([]);
+  products$: Observable<(IProduct | undefined)[]> = combineLatest(
+    this.productObs
+  ).pipe(shareReplay({ bufferSize: 1, refCount: true }));
+
+  activeProducts$: Observable<(IProduct | undefined)[]> = this.products$.pipe(
+    map((products) => products.filter((product) => product?.active)),
+    shareReplay({ bufferSize: 1, refCount: true })
+  );
+
+  activeProductNames$: Observable<(string | undefined)[]> = this.activeProducts$.pipe(map(products => products.map(product => product?.name)));
 
   constructor(private productService: ProductService) {}
 }
