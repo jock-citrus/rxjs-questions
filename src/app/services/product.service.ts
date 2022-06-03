@@ -20,8 +20,7 @@ export class ProductService {
     return this.dummyProductsBS.pipe(
       map(products => {
         const product = products.find((p) => p.productCode === productCode);
-        const similarProducts = DUMMY_PRODUCTS.filter(p => p.category === product?.category)
-        return similarProducts
+        return products.filter(p => p.category === product?.category)
       }),
     );
   }
