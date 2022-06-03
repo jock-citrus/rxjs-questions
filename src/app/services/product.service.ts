@@ -9,7 +9,7 @@ export class ProductService {
   dummyProductsBS = new BehaviorSubject<IProduct[]>(DUMMY_PRODUCTS);
 
   getProductById$(id: string): Observable<IProduct | undefined> {
-   return of(undefined) 
+    return of(undefined) 
   }
 
   getProductsOfSameCategory$(productCode: number): Observable<IProduct[]> {
