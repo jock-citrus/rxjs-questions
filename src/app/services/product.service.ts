@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, BehaviorSubject } from 'rxjs';
 
 export interface IProduct {
   id: string;
@@ -54,14 +54,17 @@ export const DUMMY_PRODUCTS: IProduct[] = [
 })
 export class ProductService {
 
-  getProductById(id: string): Observable<IProduct | undefined> {
-    const product = DUMMY_PRODUCTS.find(p => p.id === id);
-    return of(product);
+  dummyProductsBS = new BehaviorSubject<IProduct[]>(DUMMY_PRODUCTS);
+
+  getProductById$(id: string): Observable<IProduct | undefined> {
+   return of(undefined) 
   }
 
-  getProductsOfSameCategory(productCode: number): Observable<IProduct[]> {
-    const product = DUMMY_PRODUCTS.find((p) => p.productCode === productCode);
-    const similarProducts = DUMMY_PRODUCTS.filter(p => p.category === product?.category)
-    return of(similarProducts);
+  getProductsOfSameCategory$(productCode: number): Observable<IProduct[]> {
+    return of([])
+  }
+
+  setProductActiveProp(id: string, active: boolean): void {
+    
   }
 }
