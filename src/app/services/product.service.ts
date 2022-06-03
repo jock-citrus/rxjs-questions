@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject, map } from 'rxjs';
+import { Observable, BehaviorSubject, map, of } from 'rxjs';
 import { DUMMY_PRODUCTS, IProduct } from './product-data';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -12,7 +13,10 @@ export class ProductService {
     return this.dummyProductsBS.pipe(map(products => products.find(p => p.id === id)));
   }
 
-  getProductsOfSameCategory(productCode: number): Observable<IProduct[]> {
+  getProductsOfSameCategory(productCode: number | undefined): Observable<IProduct[]> {
+    if(!productCode) {
+      return of([])
+    }
     return this.dummyProductsBS.pipe(
       map(products => {
         const product = products.find((p) => p.productCode === productCode);

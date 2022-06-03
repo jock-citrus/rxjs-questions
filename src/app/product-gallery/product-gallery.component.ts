@@ -22,11 +22,11 @@ export class ProductGalleryComponent {
 
   productIds: string[] = ['product-1', 'product-2', 'product-3'];
   
-  products$: Observable<IProduct[]> = of([]);
+  products$: Observable<(IProduct | undefined)[]> = of([]);
 
-  activeProducts$: Observable<IProduct[]> = of([]);
+  activeProducts$: Observable<(IProduct | undefined)[]> = of([]);
 
-  activeProductNames$: Observable<IProduct[]> = of([]);
+  activeProductNames$: Observable<(string | undefined)[]> = of([]);
 
   constructor(private productService: ProductService) {}
 }
